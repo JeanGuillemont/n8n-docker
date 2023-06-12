@@ -2,13 +2,9 @@ FROM node:16-alpine
 
 RUN apk --update --no-cache add \
     ca-certificates \
-    graphicsmagick \
     libressl \
     shadow \
-    tzdata \
-  && apk --no-cache add --virtual fonts \
-    fontconfig \
-    msttcorefonts-installer
+    tzdata
 
 WORKDIR /app
 
@@ -21,13 +17,11 @@ USER n8n
 
 ENV TZ="UTC" \
   NODE_ICU_DATA="/usr/local/lib/node_modules/full-icu" \
-  PORT=5678 \
-  DATA_FOLDER="/data" \
-  N8N_PORT=$PORT
+  DATA_FOLDER="/data"
 
 EXPOSE 5678
 
 VOLUME [ "/data" ]
 
 ENTRYPOINT [ "node", "/usr/local/bin/n8n" ]
-CMD ["n8n", "-p", "$PORT"]
+CMD ["n8n", "-p", 5678]
