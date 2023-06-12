@@ -2,13 +2,15 @@ FROM node:16-alpine as build-stage
 
 RUN apk add --no-cache nodejs npm ca-certificates libressl
 
+RUN npm install -g npm@latest
+
 RUN npm install -g n8n@latest
 
 FROM alpine:latest as production-stage
 
 COPY --from=build-stage /usr/local/bin/n8n /usr/local/bin/
 
-ENV TZ="UTC"
+ENV TZ="UTC"  
 ENV DATA_FOLDER=/data
 
 VOLUME /data
