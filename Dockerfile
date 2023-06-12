@@ -1,11 +1,13 @@
-FROM node:16   
+FROM node:18
 
 WORKDIR /app
 
 COPY package*.json ./        
 RUN npm install --only=production
 
-COPY . .
+COPY src/ ./src/
+COPY dist/ ./dist/  
+# Copy any other needed files/directories
 
 ENV TZ="UTC"        
 ENV DATA_FOLDER=/data
