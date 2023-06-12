@@ -1,9 +1,4 @@
-FROM node:18-alpine as build
 WORKDIR /app
-
-COPY package.json ./
-RUN npm install --only=production
-COPY . .
 
 FROM alpine:latest  
 RUN apk --update --no-cache add \
@@ -11,9 +6,6 @@ RUN apk --update --no-cache add \
     libressl \
     shadow \ 
     tzdata
-
-WORKDIR /app
-COPY --from=build /app .
 
 ENV TZ="UTC" \
   NODE_ICU_DATA="/usr/local/lib/node_modules/full-icu" \
