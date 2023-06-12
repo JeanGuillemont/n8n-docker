@@ -1,10 +1,30 @@
-# Use the official n8n Docker image as the base image
-FROM n8nio/n8n
+FROM node:16-alpine
+RUN apk --update --no-cache add 
 
-# Set environment variables for basic authentication
-ENV N8N_BASIC_AUTH_ACTIVE=true
-ENV N8N_BASIC_AUTH_USER=""
-ENV N8N_BASIC_AUTH_PASSWORD=""
+ca-certificates 
 
-# Expose the n8n port
+libressl 
+
+shadow 
+
+tzdata
+RUN npm install -g n8n
+RUN addgroup -g 1500 n8n 
+
+&& adduser -u 1500 -G n8n -h /data -s /bin/sh -D n8n
+WORKDIR /app
+RUN chown -R n8n. /app
+USER n8n
+ENV TZ="UTC" 
+
+DATA_FOLDER="/data" 
+
+N8N_BASIC_AUTH_ACTIVE=true 
+
+N8N_BASIC_AUTH_USER="" 
+
+N8N_BASIC_AUTH_PASSWORD=""
+VOLUME ["/data"]
+
 EXPOSE 5678
+ENTRYPOINT ["node", "/app/node_modules/n8n/bin/n8n"]
