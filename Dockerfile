@@ -1,11 +1,10 @@
-FROM node:16
+# Use the official n8n Docker image as the base image
+FROM n8nio/n8n
 
-WORKDIR /app
+# Set environment variables for basic authentication
+ENV N8N_BASIC_AUTH_ACTIVE=true
+ENV N8N_BASIC_AUTH_USER=""
+ENV N8N_BASIC_AUTH_PASSWORD=""
 
-COPY package*.json ./        
-RUN npm install
-
-COPY . .                     
-
-EXPOSE 8080
-CMD [ "npm", "start" ]
+# Expose the n8n port
+EXPOSE 5678
