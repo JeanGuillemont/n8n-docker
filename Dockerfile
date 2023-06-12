@@ -22,8 +22,6 @@ USER n8n
 ENV TZ="UTC" \
   NODE_ICU_DATA="/usr/local/lib/node_modules/full-icu" \
   DATA_FOLDER="/data"
-  N8N_PORT="5678"
-  N8N_PROTOCOL"https"
 
 EXPOSE 5678
 
