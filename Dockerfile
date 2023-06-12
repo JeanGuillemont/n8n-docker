@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:18
 
 RUN apk --update --no-cache add \
     ca-certificates \
