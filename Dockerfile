@@ -1,22 +1,19 @@
-FROM node:16-alpine as build-stage
+FROM node:16   
 
-RUN apk add --no-cache nodejs npm ca-certificates libressl
+WORKDIR /app
 
-RUN npm install -g npm@latest
+COPY package*.json ./        
+RUN npm install --only=production
 
-RUN npm install -g n8n@latest
+COPY . .
 
-FROM alpine:latest as production-stage
-
-COPY --from=build-stage /usr/local/bin/n8n /usr/local/bin/
-
-ENV TZ="UTC"  
+ENV TZ="UTC"        
 ENV DATA_FOLDER=/data
 
-VOLUME /data
+VOLUME $DATA_FOLDER
 
 EXPOSE 5678
 
-RUN npm install -g n8n@latest
+CMD ["n8n"]        
 
-CMD ["n8n"]
+HEALTHCHECK CMD curl --fail http://localhost:5678/health || exit 1
