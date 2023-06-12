@@ -1,13 +1,11 @@
-FROM node:18
+FROM node:18-alpine
 
 WORKDIR /app
+RUN apk add --no-cache nodejs npm ca-certificates libressl
 
-COPY package*.json ./        
-RUN npm install --only=production
+RUN npm install -g npm@latest
 
-COPY src/ ./src/
-COPY dist/ ./dist/  
-# Copy any other needed files/directories
+RUN npm install -g n8n@latest       
 
 ENV TZ="UTC"        
 ENV DATA_FOLDER=/data
