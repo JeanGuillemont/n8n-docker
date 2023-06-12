@@ -1,25 +1,5 @@
-FROM node:lts-alpine
+FROM naskio/n8n-python:latest-debian
 
-# pass N8N_VERSION Argument while building or use default
-ARG N8N_VERSION=0.217.2
-
-# Set a custom user to not have n8n run as root
-USER root
-
-# Install n8n and the also temporary all the packages
-# it needs to build it correctly.
-RUN apk --update add --virtual build-dependencies python3 build-base git && \
-	npm_config_user=root npm install --location=global n8n && \
-	apk del build-dependencies
-
-# Specifying work directory
-WORKDIR /data
-
-# copy start script to container
-COPY ./start.sh /
-
-# make the script executable
-RUN chmod +x /start.sh
-
-# define execution entrypoint
-CMD ["/start.sh"]
+RUN cd /usr/lib/node_modules/n8n && npm install n8n-nodes-changed
+RUN cd /usr/lib/node_modules/n8n && npm install n8n-nodes-updates
+RUN cd /usr/lib/node_modules/n8n && npm install n8n-nodes-influxdb
