@@ -1,29 +1,28 @@
-# Use Node.js LTS version as the base image
 FROM node:lts-alpine
 
-# Set the working directory
-WORKDIR /app
+# pass N8N_VERSION Argument while building or use default
+ARG N8N_VERSION=0.217.2
 
-# Copy package.json and install dependencies
-COPY package.json .
-RUN npm install
+# Update everything and install needed dependencies
+RUN apk add --update graphicsmagick tzdata
 
-# Copy source files 
-COPY . .
+# Set a custom user to not have n8n run as root
+USER root
 
-# Set environment variables
-ENV TZ="UTC"
-ENV NODE_ENV="production"
+# Install n8n and the also temporary all the packages
+# it needs to build it correctly.
+RUN apk --update add --virtual build-dependencies python3 build-base git && \
+	npm_config_user=root npm install --location=global n8n@${N8N_VERSION} && \
+	apk del build-dependencies
 
-# Expose port 
-EXPOSE 3000
+# Specifying work directory
+WORKDIR /data
 
-# Set memory limit
-ENV MEM_LIMIT=256M
-ENV MEM_LIMIT_SWAP=384M
+# copy start script to container
+COPY ./start.sh /
 
-# Healthcheck
-HEALTHCHECK CMD npm test
+# make the script executable
+RUN chmod +x /start.sh
 
-# Run the app
-CMD ["npm", "start"]
+# define execution entrypoint
+CMD ["/start.sh"]
