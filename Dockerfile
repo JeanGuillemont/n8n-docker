@@ -1,30 +1,29 @@
+# Use Node.js LTS version as the base image
+FROM node:lts-alpine
+
+# Set the working directory
 WORKDIR /app
 
-FROM alpine:latest  
-RUN apk --update --no-cache add \
-    ca-certificates \
-    libressl \
-    shadow \ 
-    tzdata
+# Copy package.json and install dependencies
+COPY package.json .
+RUN npm install
 
-ENV TZ="UTC" \
-  NODE_ICU_DATA="/usr/local/lib/node_modules/full-icu" \
-  DATA_FOLDER="/data" \
-  PORT=5678
+# Copy source files 
+COPY . .
 
-VOLUME ["/data"]
-EXPOSE $PORT
+# Set environment variables
+ENV TZ="UTC"
+ENV NODE_ENV="production"
 
-HEALTHCHECK CMD curl --fail http://localhost:$PORT/ || exit 1
-
-LABEL name="n8n" \
-      version="1.0" \
-      description="Node.js app built with Docker"
-
-CMD ["node", "app.js"]
+# Expose port 
+EXPOSE 3000
 
 # Set memory limit
 ENV MEM_LIMIT=256M
-
-# Set memory + swap limit     
 ENV MEM_LIMIT_SWAP=384M
+
+# Healthcheck
+HEALTHCHECK CMD npm test
+
+# Run the app
+CMD ["npm", "start"]
