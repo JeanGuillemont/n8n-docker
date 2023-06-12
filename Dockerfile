@@ -1,17 +1,23 @@
-FROM node:18-alpine
+ARG N8N_VERSION=0.228.2
 
-WORKDIR /app
-RUN apk add --no-cache nodejs npm ca-certificates libressl
+FROM node:14-alpine
 
-RUN npm install -g npm@latest
+RUN apk --update --no-cache add \
+    ca-certificates \
+    libressl \
+    shadow \
+    tzdata
 
-RUN npm install -g n8n@latest       
+WORKDIR /app  
+ARG N8N_VERSION
+RUN npm config set unsafe-perm true \
+  && npm_config_user=n8n npm install n8n@${N8N_VERSION}
 
-ENV TZ="UTC"        
-ENV DATA_FOLDER=/data
+ENV TZ="UTC" \
+  NODE_ICU_DATA="/usr/local/lib/node_modules/full-icu" \
+  DATA_FOLDER="/data"
 
-VOLUME $DATA_FOLDER
-
+VOLUME [ "/data" ]
 EXPOSE 5678
 
-CMD ["n8n"]        
+ENTRYPOINT [ "node", "/app/node_modules/n8n/bin/n8n" ]
