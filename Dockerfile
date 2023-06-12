@@ -40,4 +40,4 @@ ENV TZ="UTC" \
 VOLUME [ "/data" ]
 EXPOSE 5678
 
-ENTRYPOINT [ "node", "/usr/local/bin/n8n" ]
+CMD [ "n8n" ]
