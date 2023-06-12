@@ -15,5 +15,3 @@ VOLUME $DATA_FOLDER
 EXPOSE 5678
 
 CMD ["n8n"]        
-
-HEALTHCHECK CMD curl --fail http://localhost:5678/health || exit 1
