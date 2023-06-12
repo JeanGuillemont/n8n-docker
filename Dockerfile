@@ -1,6 +1,6 @@
 ARG N8N_VERSION=0.228.2
 
-FROM node:14-alpine
+FROM node:16-alpine
 
 RUN apk --update --no-cache add \
     ca-certificates \
