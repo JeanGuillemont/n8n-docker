@@ -24,4 +24,4 @@ EXPOSE 5678
 VOLUME [ "/data" ]
 
 ENTRYPOINT [ "node", "/usr/local/bin/n8n" ]
-CMD ["n8n", "-p", 5678]
+CMD ["n8n"]
