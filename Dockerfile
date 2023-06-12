@@ -1,6 +1,7 @@
 FROM node:16-alpine as build-stage
 
-RUN apk add --no-cache ca-certificates libressl
+RUN apk add --no-cache nodejs npm ca-certificates libressl
+
 RUN npm install -g n8n@latest
 
 FROM alpine:latest as production-stage
