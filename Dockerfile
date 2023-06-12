@@ -27,9 +27,6 @@ ENV TZ="UTC" \
 
 EXPOSE 5678
 
-HEALTHCHECK --interval=5s --timeout=20s \
-  CMD n8n --info || exit 1
-
 VOLUME [ "/data" ]
 
 ENTRYPOINT [ "node", "/usr/local/bin/n8n" ]
