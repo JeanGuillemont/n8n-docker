@@ -1,4 +1,10 @@
 FROM node:16-alpine
+ARG PGPASSWORD
+ARG PGHOST
+ARG PGPORT
+ARG PGDATABASE
+ARG PGUSER
+ARG N8N_ENCRYPTION_KEY
 
 RUN apk --update --no-cache add \
     ca-certificates \
@@ -15,9 +21,15 @@ RUN addgroup -g 1500 n8n \
 
 USER n8n
 
-ENV TZ="UTC" \
-  NODE_ICU_DATA="/usr/local/lib/node_modules/full-icu" \
-  DATA_FOLDER="/data"
+ENV TZ="UTC"
+ENV NODE_ICU_DATA="/usr/local/lib/node_modules/full-icu" 
+ENV DB_TYPE=postgresdb
+ENV DB_POSTGRESDB_DATABASE=$PGDATABASE
+ENV DB_POSTGRESDB_HOST=$PGHOST
+ENV DB_POSTGRESDB_PORT=$PGPORT
+ENV DB_POSTGRESDB_USER=$PGUSER
+ENV DB_POSTGRESDB_PASSWORD=$PGPASSWORD
+ENV N8N_ENCRYPTION_KEY=$N8N_ENCRYPTION_KEY
 
 EXPOSE 5678
 
@@ -26,4 +38,4 @@ HEALTHCHECK --interval=5s --timeout=3s \
 
 VOLUME [ "/data" ]
 
-CMD [ "n8n" ]
+CMD [ "n8n", "start" ]
